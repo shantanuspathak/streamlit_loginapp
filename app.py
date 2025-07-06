@@ -1,39 +1,32 @@
 import streamlit as st
-import time
-
-def check_login(username, password):
-    # Replace with your authentication logic (e.g., checking against a database)
-    if username == "test" and password == "test":
-        return True
-    else:
-        return False
 
 def login_page():
-    st.title("Login")
+    st.title("Login Page")
+
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
+
     if st.button("Login"):
-        if check_login(username, password):
-            st.session_state.logged_in = True
-            st.session_state.username = username
-            st.success("Login successful!")
-            time.sleep(0.5)
-            st.switch_page("app.py")  # Redirect to a protected page
+        # Simple authentication (replace with more secure method in production)
+        if username == "user" and password == "password":
+            st.session_state["logged_in"] = True
+            st.session_state["current_page"] = "calc"
+            st.success("Logged in successfully!")
+            st.rerun() # Rerun to switch to the calculator page
         else:
             st.error("Invalid username or password")
 
-def main_page():
-    st.title("Main Page (Protected)")
-    st.write(f"Welcome, {st.session_state.username}!")
-    if st.button("Logout"):
-        st.session_state.logged_in = False
-        st.session_state.username = None
-        st.success("Logged out!")
-        time.sleep(0.5)
-        st.switch_page("app.py")  # Redirect back to login
+def main():
+    if "logged_in" not in st.session_state:
+        st.session_state["logged_in"] = False
+        st.session_state["current_page"] = "login"
+
+    if st.session_state["logged_in"] and st.session_state["current_page"] == "calc":
+        # Import and run the calculator app
+        import calc
+        calc.calculator_page()
+    else:
+        login_page()
 
 if __name__ == "__main__":
-    if not st.session_state.get("logged_in", False):
-        login_page()
-    else:
-        main_page()
+    main()
