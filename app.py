@@ -18,7 +18,7 @@ def login_page():
             st.session_state.username = username
             st.success("Login successful!")
             time.sleep(0.5)
-            st.switch_page("pages/page1.py")  # Redirect to a protected page
+            st.switch_page("app.py")  # Redirect to a protected page
         else:
             st.error("Invalid username or password")
 
